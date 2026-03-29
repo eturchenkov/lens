@@ -1,13 +1,24 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 
 export default function Lens({ endpoint }: { endpoint: string }) {
+  const containerRef = useRef(null)
   const [genUI, setGenUI] = useState<string>("")
   const [textInput, setTextInput] = useState<string>("")
 
   return (
     <>
       <div className="w-full">
-        <div dangerouslySetInnerHTML={{ __html: genUI }} />
+        <div
+          ref={containerRef}
+          dangerouslySetInnerHTML={{ __html: genUI }}
+          onClick={(evt) => {
+            window.elt = evt.target
+            window.container = containerRef.current
+            console.log(evt.target)
+            console.log(window.container)
+            evt.stopPropagation()
+          }}
+        />
       </div>
       <div className="w-full flex justify-center">
         <textarea
