@@ -1,4 +1,5 @@
 import { useState, useRef } from "react"
+import { Input } from "@/pages/api/lens"
 
 export default function Lens({ endpoint }: { endpoint: string }) {
   const containerRef = useRef(null)
@@ -11,12 +12,18 @@ export default function Lens({ endpoint }: { endpoint: string }) {
         <div
           ref={containerRef}
           dangerouslySetInnerHTML={{ __html: genUI }}
-          onClick={(evt) => {
-            window.elt = evt.target
+          onClick={async (e) => {
+            window.elt = e.target
             window.container = containerRef.current
-            console.log(evt.target)
+            console.log(e.target)
             console.log(window.container)
-            evt.stopPropagation()
+            e.target.setAttribute("current-event", "[ CLICK ]")
+            const res = await request(endpoint, {
+              type: "markup",
+              content: containerRef.current.innerHTML,
+            })
+            setGenUI(res)
+            e.stopPropagation()
           }}
         />
       </div>
@@ -28,17 +35,11 @@ export default function Lens({ endpoint }: { endpoint: string }) {
           onKeyDown={async (e) => {
             if (e.key == "Enter" && e.ctrlKey) {
               e.preventDefault()
-              const res = await fetch(endpoint, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  prompt: textInput,
-                }),
+              const res = await request(endpoint, {
+                type: "prompt",
+                content: textInput,
               })
-              const json = await res.json()
-              setGenUI(json.text)
+              setGenUI(res)
             }
           }}
           placeholder="Describe view you want"
@@ -48,4 +49,18 @@ export default function Lens({ endpoint }: { endpoint: string }) {
       <script src="https://cdn.tailwindcss.com"></script>
     </>
   )
+}
+
+const request = async (endpoint: string, input: Input) => {
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      input,
+    }),
+  })
+  const json = await res.json()
+  return json.text
 }

@@ -1,13 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { lens } from "@/pages/api/lens"
+import { lens, Input } from "@/pages/api/lens"
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<{ text: string }>,
 ) {
   if (req.method == "POST") {
-    const { prompt } = req.body
-    const result = await lens(prompt, JSON.stringify(users))
+    const { input }: { input: Input } = req.body
+    const result = await lens(input, JSON.stringify(users))
     res.status(201).json({ text: result })
   }
 }

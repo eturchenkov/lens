@@ -1,23 +1,44 @@
 import Anthropic from "@anthropic-ai/sdk"
 import OpenAI from "openai"
 
+export type Input = { type: "prompt" | "markup"; content: string }
+
 const extractHtmlContent = (respond: string): string => {
   const match = respond.match(/```html(.*?)```/s)
   return match ? match[1].replaceAll("\\n", "").replaceAll('\\"', '"') : ""
 }
 
-export const lens = async (prompt: string, data: string) => {
-  console.log(prompt)
-  const ctx = `Write simple html markup to show ${prompt}
+export const lens = async (input: Input, data: string) => {
+  console.log(input)
+  let res = ""
+  if (input.type === "prompt") {
+    const ctx = `Write simple html markup to show ${input.content}
 [ Data ]
 ${data}
 [ RULES ]
 That markup will be embedded to existing html page.
 Use beautiful dark tailwind styles.`
-  console.log(ctx)
-  const res = await llmRouter["groq"](ctx)
+    console.log(ctx)
+    res = await llmRouter["groq"](ctx)
+  } else {
+    const ctx = `Use following markup and write next view user should get in browser.
+Right now user made click event that in the markup notes as attribute current-event="[ CLICK ]" on target DOM element.
+All elements should be visiable.
+Don't add any <script> tags there.
+${input.content}
+[ Data ]
+${data}
+[ RULES ]
+That markup will be embedded to existing html page.
+Use beautiful dark tailwind styles.`
+    console.log(ctx)
+    res = await llmRouter["groq"](ctx)
+  }
+
   console.log(res)
-  return extractHtmlContent(res)
+  const htmlContent = extractHtmlContent(res)
+  console.log(htmlContent)
+  return htmlContent
 }
 
 const anthropicClient = new Anthropic({
