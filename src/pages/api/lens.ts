@@ -17,7 +17,7 @@ export const lens = async (input: Input, data: string) => {
 ${data}
 [ RULES ]
 That markup will be embedded to existing html page.
-Use beautiful dark tailwind styles.`
+Use beautiful modern dark tailwind styles.`
     console.log(ctx)
     res = await llmRouter["groq"](ctx)
   } else {
@@ -25,12 +25,19 @@ Use beautiful dark tailwind styles.`
 Right now user made click event that in the markup notes as attribute current-event="[ CLICK ]" on target DOM element.
 All elements should be visiable.
 Don't add any <script> tags there.
+Don't use modal.
+Write just only markup.
 ${input.content}
 [ Data ]
 ${data}
 [ RULES ]
+Use beautiful dark tailwind styles.
 That markup will be embedded to existing html page.
-Use beautiful dark tailwind styles.`
+Always use this format:
+${"```"}html
+markup
+${"```"}`
+
     console.log(ctx)
     res = await llmRouter["groq"](ctx)
   }

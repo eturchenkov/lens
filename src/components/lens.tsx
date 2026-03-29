@@ -13,10 +13,6 @@ export default function Lens({ endpoint }: { endpoint: string }) {
           ref={containerRef}
           dangerouslySetInnerHTML={{ __html: genUI }}
           onClick={async (e) => {
-            window.elt = e.target
-            window.container = containerRef.current
-            console.log(e.target)
-            console.log(window.container)
             e.target.setAttribute("current-event", "[ CLICK ]")
             const res = await request(endpoint, {
               type: "markup",
