@@ -12,27 +12,40 @@ export const lens = async (input: Input, data: string) => {
   console.log(input)
   let res = ""
   if (input.type === "prompt") {
-    const ctx = `Write simple html markup to show ${input.content}
+    const ctx = `Write beautiful dark tailwind html markup to show ${input.content}
 [ Data ]
 ${data}
 [ RULES ]
-That markup will be embedded to existing html page.
-Use beautiful modern dark tailwind styles.`
+Use beautiful dark tailwind bootstrap styles.
+Use bright blue to accent design elements.
+That markup will be embedded to existing html page so don't set backgroud color.
+All DOM elements should be visiable.
+Don't add any <script> tags or js code there.
+Don't use modal.
+For card and chart use div wrapper to display them in center.
+Write just only next view markup and skip previous one if it don't need anymore.
+Always use this format:
+${"```"}html
+markup
+${"```"}`
     console.log(ctx)
     res = await llmRouter["groq"](ctx)
   } else {
-    const ctx = `Use following markup and write next view user should get in browser.
+    const ctx = `Use following markup to write next view user should get in browser.
 Right now user made click event that in the markup notes as attribute current-event="[ CLICK ]" on target DOM element.
-All elements should be visiable.
-Don't add any <script> tags there.
-Don't use modal.
-Write just only markup.
+[ CURRENT VIEW ]
 ${input.content}
 [ Data ]
 ${data}
 [ RULES ]
-Use beautiful dark tailwind styles.
-That markup will be embedded to existing html page.
+Use beautiful dark tailwind bootstrap styles.
+Use bright blue to accent design elements.
+That markup will be embedded to existing html page so don't set backgroud color.
+All DOM elements should be visiable.
+Don't add any <script> tags or js code there.
+Don't use modal.
+For card and chart use div wrapper to display them in center.
+Write just only next view markup and skip previous one if it don't need anymore.
 Always use this format:
 ${"```"}html
 markup
@@ -74,7 +87,7 @@ const llmRouter = {
   },
   groq: async (ctx: string) => {
     const response = await groqClient.responses.create({
-      model: "openai/gpt-oss-20b",
+      model: "openai/gpt-oss-120b",
       input: ctx,
       max_output_tokens: 8 * 1024,
     })

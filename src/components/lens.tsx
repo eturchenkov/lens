@@ -8,18 +8,21 @@ export default function Lens({ endpoint }: { endpoint: string }) {
 
   return (
     <>
-      <div className="w-full">
+      <div className="w-full mb-8">
         <div
           ref={containerRef}
           dangerouslySetInnerHTML={{ __html: genUI }}
           onClick={async (e) => {
-            e.target.setAttribute("current-event", "[ CLICK ]")
-            const res = await request(endpoint, {
-              type: "markup",
-              content: containerRef.current.innerHTML,
-            })
-            setGenUI(res)
-            e.stopPropagation()
+            console.log(e.target)
+            if (!["INPUT"].includes(e.target.tagName)) {
+              e.target.setAttribute("current-event", "[ CLICK ]")
+              const res = await request(endpoint, {
+                type: "markup",
+                content: containerRef.current.innerHTML,
+              })
+              setGenUI(res)
+              e.stopPropagation()
+            }
           }}
         />
       </div>
