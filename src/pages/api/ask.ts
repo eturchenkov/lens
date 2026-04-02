@@ -23,14 +23,14 @@ const llmRouter = {
 
     return async (ctx: string) => {
       const message = await anthropicClient.messages.create({
-        max_tokens: 8 * 1024,
+        max_tokens: 16 * 1024,
         messages: [
           {
             role: "user",
             content: ctx,
           },
         ],
-        model: "claude-haiku-4-5",
+        model: "claude-sonnet-4-6",
       })
 
       return JSON.stringify(message.content[0].text)
