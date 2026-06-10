@@ -79,4 +79,12 @@ export default [
     city: "San Jose",
     occupation: "Backend Developer",
   },
+  {
+    id: 11,
+    name: "Karen Lee",
+    email: "karen.lee@example.com",
+    age: 30,
+    city: "Austin",
+    occupation: "Machine Learning Engineer",
+  },
 ]
